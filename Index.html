@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Girlfriend? 💌</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', 'Arial Rounded MT Bold', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(145deg, #1e2b3a, #1a1e2c);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: all 0.8s ease;
+        }
+        
+        body.valentine-mode {
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+        }
+        
+        /* Flying Letter Styles */
+        .envelope-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(145deg, #1e2b3a, #1a1e2c);
+            z-index: 100;
+            transition: all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .envelope-container.fly-away {
+            transform: translateY(-150vh) rotate(20deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .envelope {
+            width: 320px;
+            height: 240px;
+            background: #f9e6cf;
+            position: relative;
+            border-radius: 0 20px 20px 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            cursor: pointer;
+            animation: float 3s ease-in-out infinite;
+            transition: transform 0.3s;
+        }
+        
+        .envelope:hover {
+            transform: scale(1.05);
+        }
+        
+        .envelope:before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-bottom: 50px solid #f9d9b4;
+        }
+        
+        .envelope:after {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 320px solid transparent;
+            border-bottom: 50px solid #f9cfa4;
+        }
+        
+        .heart-seal {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: #ff4d6d;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 30px;
+            box-shadow: 0 5px 15px rgba(255,77,109,0.4);
+            z-index: 10;
+        }
+        
+        .envelope-text {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #5a4a42;
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 0 20px;
+        }
+        
+        .envelope-sub {
+            font-size: 0.9rem;
+            color: #7a6a62;
+            margin-top: 5px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Main Container - Hidden Initially */
+        .main-container {
+            max-width: 900px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            padding: 40px;
+            position: relative;
+            display: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .main-container.show {
+            display: block;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Letter Paper Style */
+        .letter-paper {
+            background: #fff9f0;
+            padding: 35px;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: inset 0 0 0 1px rgba(255,215,215,0.5), inset 0 0 20px rgba(0,0,0,0.03);
+            background-image: linear-gradient(#fff9f0 1px, transparent 1px);
+            background-size: 100% 30px;
+            border-left: 5px solid #ff8a9c;
+        }
+        
+        .letter-paper:before {
+            content: '❤️';
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            font-size: 24px;
+            opacity: 0.3;
+            color: #ff6b8b;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ffe2e2;
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            color: #ff4d6d;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .to-from {
+            display: flex;
+            justify-content: space-between;
+            color: #6b5b5b;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        
+        .message {
+            line-height: 2;
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+        
+        .message p {
+            margin-bottom: 20px;
+        }
+        
+        .highlight {
+            background: linear-gradient(180deg, transparent 60%, #ffd7d7 40%);
+            padding: 0 5px;
+            font-weight: 700;
+            color: #ff4d6d;
+        }
+        
+        .photo-frame {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 8px solid #ffb3b3;
+            box-shadow: 0 15px 25px rgba(255,77,109,0.2);
+            margin: 20px auto;
+        }
+        
+        .placeholder-photo {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 4rem;
+        }
+        
+        .question-box {
+            background: #ffe9f0;
+            padding: 25px;
+            border-radius: 20px;
+            margin: 30px 0 20px;
+            text-align: center;
+            border: 3px dashed #ff8a9c;
+        }
+        
+        .question {
+            font-size: 2.3rem;
+            color: #ff4d6d;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .question-sub {
+            font-size: 1.2rem;
+            color: #5f4b4b;
+            margin-bottom: 10px;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 18px 45px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .yes-btn {
+            background: linear-gradient(45deg, #ff4d6d, #ff8a9c);
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .yes-btn:hover {
+            background: linear-gradient(45deg, #ff3355, #ff6b8b);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 20px 30px rgba(255,77,109,0.4);
+        }
+        
+        .no-btn {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+            position: relative;
+        }
+        
+        .response-message {
+            display: none;
+            text-align: center;
+            padding: 40px 30px;
+            background: linear-gradient(145deg, #fff0f5, #ffe4ec);
+            border-radius: 30px;
+            margin-top: 30px;
+            border: 4px solid #ff4d6d;
+            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .response-message h2 {
+            color: #ff4d6d;
+            font-size: 3rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        
+        .response-message p {
+            font-size: 1.4rem;
+            color: #2d2d2d;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .floating-hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .floating-heart {
+            position: absolute;
+            color: rgba(255,77,109,0.6);
+            font-size: 24px;
+            animation: floatAround 8s linear infinite;
+        }
+        
+        @keyframes floatAround {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        .persuasion-counter {
+            font-size: 1.2rem;
+            color: #ff6b8b;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #ffe9f0;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: 600;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .signature {
+            margin-top: 40px;
+            text-align: right;
+            font-size: 1.2rem;
+            color: #5f4b4b;
+            border-top: 1px solid #ffd7d7;
+            padding-top: 25px;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container { padding: 25px; }
+            h1 { font-size: 2.2rem; }
+            .question { font-size: 1.8rem; }
+            .btn { padding: 15px 30px; font-size: 1.2rem; }
+            .envelope { width: 280px; height: 200px; }
+            .envelope:before { border-left: 140px solid transparent; border-right: 140px solid transparent; }
+            .envelope:after { border-left: 280px solid transparent; }
+            .response-message h2 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Flying Letter Envelope -->
+    <div class="envelope-container" id="envelopeContainer">
+        <div class="envelope" id="envelope">
+            <div class="heart-seal">
+                <i class="fas fa-heart"></i>
+            </div>
+            <div class="envelope-text">
+                <strong>To My Girlfriend 💌</strong>
+                <div class="envelope-sub">Click to open the letter</div>
+                <div style="margin-top: 15px; font-size: 0.9rem;">To the idiot who fell in love with me</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container" id="mainContainer">
+        <div class="floating-hearts" id="floatingHearts"></div>
+        
+        <div class="letter-paper">
+            <div class="header">
+                <h1>💌 To: Lee Minha</h1>
+            </div>
+            
+            <div class="to-from">
+                <span>From: Pemsang</span>
+                <span>February 11th</span>
+            </div>
+            
+            <div class="message">
+                <p>My girlfriend! MINHA,</p>
+                
+                <p>I've been thinking about how to write this letter for such a long time.<br>
+                And honestly, Didnt think you would like me even after moving to korea.</p>
+                
+                <p>The first time i saw you, I was like Omg japanese girl and shes pretty! because originally i was into japanese people and i paid no attention to korean people because they werent my type.<br>
+                <span class="highlight">But i got to talk to yoy and i found out youre korean and i was like wtf i called u japanese girl for such a long time you remember right ahahahaha. </span><br>
+                slowly I got to know you properly and i remember seeing you everywhere in campus and i would look at you and be like omg shes so cute.</p>
+                
+                <p>And then you confessed to me and i could not believe it, I may have looked nervous but i was screaming YESSSSSSSS when you confessed to me. It made me so happy!!!!</p>
+                
+                <p>I don't know why you like me you just say its cause im cute but idk what else to say about that. But i like you because youre so smart i like nerdy girls who are really into things they like like you like japanese things and you are superrr happy to talk about them i think thats the thing i liked most about you.</p>
+                
+                <p style="margin-top: 30px;"><strong>So... This time i will confess first</strong></p>
+                
+                <p style="font-size: 1.5rem; color: #ff4d6d; font-weight: 700; text-align: center; margin: 30px 0;">
+                    Will you be my Valentine?
+                </p>
+            </div>
+            
+            <!-- Photo Frame - Replace with your photo -->
+            <div class="photo-frame">
+                <div class="placeholder-photo">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <!-- To add your photo, replace the div above with: 
+                <img src="your-photo.jpg" alt="Us" style="width:100%; height:100%; object-fit:cover;">
+                -->
+            </div>
+            
+            <div class="question-box">
+                <div class="question-sub">Will you be my Valentine?</div>
+            </div>
+            
+            <div class="buttons">
+                <button class="btn yes-btn" id="yesBtn">
+                    <i class="fas fa-check-circle"></i> Yes, I'd love to! 💕
+                </button>
+                <button class="btn no-btn" id="noBtn">
+                    <i class="fas fa-times-circle"></i> No...
+                </button>
+            </div>
+            
+            <div id="noButtonContainer" style="position: relative; min-height: 80px;"></div>
+            <div id="persuasionText" class="persuasion-counter" style="display: none;"></div>
+            
+            <div class="response-message" id="responseMessage">
+                <h2>🎉 YAY! REALLY?! 🎉</h2>
+                <p style="font-size: 1.8rem; font-weight: 700; color: #ff4d6d;">YOU SAID YES?! 😭💖</p>
+                <p>OMG REALLY???<br>
+                ARR YOU SURE YOU PICKED THE RIGHT OPTION?</p>
+                <p>I guess you're stuck with me then!!!<br>
+                and i wont let anyone else take you away from me.</p>
+                <p style="margin-top: 30px; font-size: 1.4rem;">
+                    I love you so much, Minha. ❤️<br>
+                    - Pemsang
+                </p>
+                <div style="display: flex; justify-content: center; gap: 15px; margin-top: 25px;">
+                    <i class="fas fa-heart" style="color: #ff4d6d; font-size: 2.5rem;"></i>
+                    <i class="fas fa-heart" style="color: #ff6b8b; font-size: 2.5rem;"></i>
+                    <i class="fas fa-heart" style="color: #ff8a9c; font-size: 2.5rem;"></i>
+                </div>
+            </div>
+            
+            <div class="signature">
+                Im always thinking about you<br>
+                Pemsang 💌
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const envelopeContainer = document.getElementById('envelopeContainer');
+            const envelope = document.getElementById('envelope');
+            const mainContainer = document.getElementById('mainContainer');
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            const responseMessage = document.getElementById('responseMessage');
+            const floatingHearts = document.getElementById('floatingHearts');
+            const persuasionText = document.getElementById('persuasionText');
+            const body = document.body;
+            
+            let noClickCount = 0;
+            
+            // ===== FLYING LETTER ANIMATION =====
+            envelope.addEventListener('click', function() {
+                envelopeContainer.classList.add('fly-away');
+                
+                setTimeout(() => {
+                    mainContainer.classList.add('show');
+                    createFloatingHearts(30);
+                    body.classList.add('valentine-mode');
+                }, 1200);
+            });
+            
+            // ===== FLOATING HEARTS =====
+            function createFloatingHearts(count) {
+                for (let i = 0; i < count; i++) {
+                    setTimeout(() => {
+                        createHeart();
+                    }, i * 100);
+                }
+            }
+            
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.fontSize = (Math.random() * 30 + 15) + 'px';
+                heart.style.animationDuration = (Math.random() * 6 + 5) + 's';
+                heart.style.animationDelay = Math.random() * 3 + 's';
+                floatingHearts.appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, 10000);
+            }
+            
+            // ===== YES BUTTON =====
+            yesBtn.addEventListener('click', function() {
+                responseMessage.style.display = 'block';
+                yesBtn.style.display = 'none';
+                noBtn.style.display = 'none';
+                persuasionText.style.display = 'none';
+                
+                // Celebration hearts
+                for (let i = 0; i < 50; i++) {
+                    setTimeout(() => {
+                        createHeart();
+                    }, i * 50);
+                }
+                
+                // Pop animation
+                mainContainer.style.animation = 'none';
+                setTimeout(() => {
+                    mainContainer.style.animation = 'popIn 0.6s ease';
+                }, 10);
+            });
+            
+            // ===== PLAYFUL "NO" BUTTON - INFINITE PERSUASION =====
+            const persuasionMessages = [
+                "No? Are you sure? 😢",
+                "Can you... maybe think about it again? 🥺",
+                "My heart is this big for you! 💔",
+                "Just give me one chance? 🙏",
+                "I don't think I'll sleep tonight... 😭",
+                "The answer to my life is you...",
+                "Is there still hope? ✨",
+                "I'm never giving up! 💪",
+                "I like you way too much...",
+                "I'll ask you 100 times if I have to!",
+                "I'll keep asking until the end of the world 🌍",
+                "It's only you. It's always been you.",
+                "My heart feels like it's exploding 💘",
+                "I'll buy you coffee if you say yes! ☕",
+                "I'll buy you dinner! Anywhere you want! 🍜",
+                "Say yes and I'll make you happy forever!",
+                "I've been waiting for this moment my whole life...",
+                "I just want to be your Valentine 💝",
+                "Even just for one day...",
+                "I'll protect your smile forever.",
+                "I'll still be asking 30 years from now!",
+                "You're literally my dream girl.",
+                "This is destiny, right? ✨",
+                "I REALLY, REALLY like you.",
+                "Don't you think it's time to say yes? 🥹",
+                "What did I do wrong? I can fix it!",
+                "I can change! I'll change EVERYTHING! 🛠️",
+                "I can't do this without you...",
+                "Okay, LAST time I'm asking! (This is my 50th 'last time')",
+                "Sorry, I didn't catch that? 👂",
+                "My heart is going THUMP THUMP 🫀",
+                "You'll NEVER regret saying yes, I promise!",
+                "I mean it. Every single word. ❤️",
+                "How about we start our 100 days tomorrow?",
+                "I love you. There. I said it. 💕"
+            ];
+            
+            // No button hover - runs away!
+            noBtn.addEventListener('mouseover', function() {
+                if (noClickCount < 8) {
+                    const container = document.querySelector('.letter-paper');
+                    const containerRect = container.getBoundingClientRect();
+                    const btnRect = noBtn.getBoundingClientRect();
+                    
+                    const maxX = containerRect.width - btnRect.width - 40;
+                    const maxY = containerRect.height - btnRect.height - 150;
+                    
+                    const randomX = Math.max(20, Math.min(maxX, Math.random() * maxX));
+                    const randomY = Math.max(20, Math.min(maxY, Math.random() * maxY));
+                    
+                    noBtn.style.position = 'absolute';
+                    noBtn.style.left = randomX + 'px';
+                    noBtn.style.top = randomY + 'px';
+                }
+            });
+            
+            // No button click - infinite persuasion loop
+            noBtn.addEventListener('click', function() {
+                noClickCount++;
+                persuasionText.style.display = 'block';
+                
+                // Change button text based on clicks
+                if (noClickCount === 1) {
+                    noBtn.innerHTML = '<i class="fas fa-times-circle"></i> No...?';
+                } else if (noClickCount === 2) {
+                    noBtn.innerHTML = '<i class="fas fa-times-circle"></i> Really no...?';
+                } else if (noClickCount === 3) {
+                    noBtn.innerHTML = '<i class="fas fa-times-circle"></i> Are you sure...?';
+                } else if (noClickCount === 5) {
+                    noBtn.innerHTML = '<i class="fas fa-times-circle"></i> Please... 🥺';
+                } else if (noClickCount === 7) {
+                    noBtn.innerHTML = '<i class="fas fa-times-circle"></i> Wait, what?';
+                } else if (noClickCount === 10) {
+                    noBtn.innerHTML = '<i class="fas fa-times-circle"></i> One more chance...';
+                }
+                
+                // Show random persuasion message
+                if (noClickCount <= persuasionMessages.length) {
+                    const randomIndex = Math.floor(Math.random() * persuasionMessages.length);
+                    persuasionText.innerHTML = `💬 "${persuasionMessages[randomIndex]}" (Attempt #${noClickCount})`;
+                } else {
+                    // INFINITE MODE - never ends until she says yes!
+                    const infiniteMessages = [
+                        `I'll keep asking until you say yes! 🔁 (${noClickCount} times and counting)`,
+                        `Are you tired of me yet? Because I'm not tired of you! ✨`,
+                        `I asked ${noClickCount} times. I'll ask ${noClickCount + 1000} more.`,
+                        `I don't know the word "give up" 💪`,
+                        `Today, tomorrow, forever... it's always you.`,
+                        `I'd circle the earth ${Math.floor(noClickCount / 5)} times for you! 🌎`,
+                        `YES! YES! YES! YES! YES! 🗣️`,
+                        `Still no? Okay, I'll keep going...`,
+                        `You smiling is literally my favorite thing 😊`,
+                        `If this isn't dedication, I don't know what is!`,
+                        `My heart only beats for you. 🫀`,
+                        `I've lost count but I've never lost hope! ✨`
+                    ];
+                    const randomIndex = Math.floor(Math.random() * infiniteMessages.length);
+                    persuasionText.innerHTML = `💬 "${infiniteMessages[randomIndex]}"`;
+                }
+                
+                // Make Yes button more appealing after many No clicks
+                if (noClickCount === 15) {
+                    yesBtn.style.transform = 'scale(1.1)';
+                    yesBtn.style.boxShadow = '0 0 30px #ff4d6d';
+                    persuasionText.innerHTML += '<br>✨ That YES button is looking pretty nice, right? ✨';
+                }
+                
+                if (noClickCount === 20) {
+                    noBtn.style.transform = 'scale(0.9)';
+                }
+                
+                if (noClickCount === 30) {
+                    noBtn.style.transform = 'scale(0.8)';
+                    noBtn.innerHTML = '<i class="fas fa-heart"></i> Yes...?';
+                }
+                
+                if (noClickCount === 40) {
+                    noBtn.style.transform = 'scale(0.7)';
+                    noBtn.innerHTML = '<i class="fas fa-heart"></i> Okay... yes ❤️';
+                }
+                
+                if (noClickCount === 50) {
+                    // After 50 No clicks, automatically trigger Yes
+                    yesBtn.click();
+                }
+                
+                // Create a floating heart with each click
+                createHeart();
+            });
+            
+            // Generate hearts periodically
+            setInterval(() => {
+                if (mainContainer.classList.contains('show')) {
+                    createHeart();
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
